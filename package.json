@@ -1,0 +1,11 @@
+{
+  "name": "au_tableau_front",
+  "version": "1.0.0",
+  "description": "front au tableau",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "El amrani Mohammed",
+  "license": "MIT"
+}
