@@ -25,7 +25,7 @@
         const randomStudentBtn = document.getElementById("randomStudentBtn");
         const statusMessage = document.getElementById("statusMessage");
         const resetBtn = document.getElementById("resetBtn");
-    
+        const editClassBtn = document.getElementById("editClassBtn");
         // Charger les classes existantes au démarrage
         getClassrooms();
         toggleAddClassSection();
@@ -140,6 +140,43 @@
                 })
                 .catch(error => console.error("Erreur lors de la suppression de la classe :", error));
         });
+
+        // Écouteur pour le bouton d'édition de la classe
+editClassBtn.addEventListener("click", () => {
+    if (!currentClassId) {
+        alert("Veuillez sélectionner une classe à modifier.");
+        return;
+    }
+        // recup le nouveau name
+        const newClassName = prompt("Entrez le nouveau nom de la classe :", classSelector.options[classSelector.selectedIndex].text);
+        // on verifie que cest pas vide et on clear les espace
+        if (newClassName && newClassName.trim() !== classSelector.options[classSelector.selectedIndex].text) {
+            axios.put(`/classrooms/${currentClassId}`, { name: newClassName.trim() })
+                .then(() => {
+                    const classToUpdate = classrooms.find(c => c._id === currentClassId);
+                    if (classToUpdate) {
+                        classToUpdate.name = newClassName.trim();
+                        updateClassSelector(); // Rafraîchir le sélecteur
+                        classSelector.value = currentClassId; // Garder la sélection sur la classe modifiée
+                    }
+
+                    //  message de success
+                    statusMessage.textContent = "Nom de la classe modifié avec succès !";
+                    statusMessage.classList.remove("text-red-500");
+                    statusMessage.classList.add("text-green-500");
+                })
+                .catch(error => {
+                    if (error.response && error.response.status === 409) {
+                        statusMessage.textContent = "Le nom de la classe existe déjà.";
+                        statusMessage.classList.remove("text-green-500");
+                        statusMessage.classList.add("text-red-500");
+                    } else {
+                        console.error("Erreur lors de la modification de la classe :", error);
+                    }
+                });
+        }
+});
+
     
         // Sélection d'une classe et chargement de ses étudiants
         function selectClass() {
