@@ -1,19 +1,45 @@
 <!DOCTYPE html>
-<html lang="fr-FR">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="main.js" defer></script>
     <title>Au Tableau</title>
     <link rel="icon" href="favicon.png" type="image/png">
     <style>
-        .bg-gradient-dark-mode {
+        .bg-gradient-custom {
             background-image: linear-gradient(to right bottom, #111827, #111827, #111827, #111827, #111827, #121928, #131b2a, #141c2b, #171f2e, #192231, #1c2634, #1f2937);
-        } 
+        }
+        .btn-blue { background-color: #2563eb; }
+        .btn-green { background-color: #10b981; }
+        .btn-red { background-color: #e11d48; }
+        .ma-box {
+            background-color: #111827;
+            border: 1px solid #4b5563;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.3), 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .list- { background-color: #1f2937; border-color: #4b5563; }
+        .hidden { display: none; }
+        .passed-student { background-color: #818b9f; }
+        .action-btn { margin-left: 10px; cursor: pointer; }
+        .input-error {
+        border-color: #e11d48;
+        background-color: #2d1f24;
+    }
+    .error-message {
+        color: #e11d48;
+        font-size: 0.875rem; 
+        margin-top: 0.25rem;
+    }
+    /* #Modal { display: none; } */
+
     </style>
 </head>
-<body class="h-full bg-gradient-dark-mode text-[#e3e6ee]">
+<body class="h-screen bg-gradient-custom text-[#e3e6ee]">
 
     <!-- Header -->
     <header class="text-white py-4">
@@ -23,7 +49,56 @@
     </header>
 
     <!-- Main Container -->
-   
+    <div class="container mx-auto py-10">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+
+       
+
+            <section class="ma-box">
+                <h2 class="text-2xl font-semibold mb-4">Gestion des Classes</h2>
+
+                <div class="flex flex-col gap-y-4 mb-4">
+
+                    <!-- Formulaire CLASSROOMS bouton de suppression -->
+                    <div class="flex items-center">
+                        <select id="classSelector" class="w-full border border-gray-500 rounded-md px-4 py-2 bg-[#1f2937] text-[#e3e6ee]">
+                            <option value="">Choisir une classe</option>
+                        </select>
+                        <button id="deleteClassBtn" class="btn-red text-white px-4 py-2 rounded-md ml-4">🗑️</button>
+                    </div>
+
+                    <section class="ma-box" id="addClassSection">
+                        <h2 class="text-2xl font-semibold mb-4">Ajouter une Nouvelle Classe</h2>
+                        <form id="addClassForm" class="space-y-4">
+                            <input type="text" id="classNameInput" class="w-full border border-gray-500 rounded-md px-4 py-2 bg-[#1f2937] text-[#e3e6ee]" placeholder="Nom de la nouvelle classe">
+                            <button type="submit" class="btn-green text-white px-4 py-2 rounded-md">Ajouter Classe</button>
+                        </form>
+                        <div id="noClassesMessage" class="text-gray-300 hidden mt-2">Vous avez selectionné aucune classe</div>
+                    </section>
+                </div>
+                
+                <!-- La liste des etudiants -->
+                <div class="mt-6 hidden" id="studentSection">
+                    <h3 class="text-lg font-medium mb-2">Étudiants de la classe</h3>
+                    <form id="studentForm" class="space-y-4">
+                        <input type="text" id="studentName" class="w-full border border-gray-500 rounded-md px-4 py-2 bg-[#1f2937] text-[#e3e6ee]" placeholder="Nom de l'étudiant">
+                        <button type="submit" class="btn-blue text-white px-4 py-2 rounded-md">Ajouter Étudiant</button>
+                    </form>
+                    <ul id="studentList" class="space-y-2 mt-4"></ul>
+                </div>
+            </section>
+
+                 
+
+            <!-- Section Gestion de la Soutenance -->
+            <section class="ma-box hidden" id="soutenanceSection">
+                <h2 class="text-2xl font-semibold mb-4">Soutenance</h2>
+                <button class="btn-blue text-white px-4 py-2 rounded-md" id="randomStudentBtn">Appeler un étudiant</button>
+                <button class="btn-red text-white px-4 py-2 rounded-md mt-4" id="resetBtn">Réinitialiser les étudiants passés</button>
+                <p class="mt-4 text-gray-300" id="statusMessage">Aucun étudiant n'a encore été appelé.</p>
+            </section>
+        </div>
+    </div>
 
 </body>
 </html>
